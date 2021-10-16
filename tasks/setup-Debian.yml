@@ -21,11 +21,11 @@
 
 - name: Add Docker apt-key.
   apt_key:
-    url: "{{ docker_apt_gpg_key }}"
+    url: "{{ containerd_docker_apt_gpg_key }}"
     state: present
 
 - name: Add Docker repository.
   apt_repository:
-    repo: "{{ docker_apt_repository }}"
+    repo: "{{ containerd_docker_apt_repository }}"
     state: present
     update_cache: true
