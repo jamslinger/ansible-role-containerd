@@ -1,0 +1,54 @@
+---
+- include_tasks: setup-Debian.yml
+  when: ansible_os_family == 'Debian'
+
+- name: Add containerd.conf to modules load.
+  template:
+    src: containerd.conf.j2
+    dest: /etc/modules-load.d/containerd.conf
+
+- name: Load overlay module.
+  modprobe:
+    name: overlay
+
+- name: Load br_netfilter module.
+  modprobe:
+    name: br_netfilter
+
+- name: Add 99-kubernetes-cri.conf file.
+  template:
+    src: 99-kubernetes-cri.conf.j2
+    dest: /etc/sysctl.d/99-kubernetes-cri.conf
+
+- name: Read new system config.
+  command: sysctl --system
+  changed_when: false
+
+- name: Install Containerd.
+  package:
+    name: containerd.io
+    state: latest
+
+- name: Start containerd.
+  service:
+    name: containerd
+    state: started
+    enabled: true
+
+- name: Create containerd config folder.
+  file:
+    path: /etc/containerd
+    state: directory
+
+- name: Create containerd config.
+  template:
+    src: containerd.config.toml.j2
+    dest: /etc/containerd/config.toml
+  register: cgroup_driver
+
+- name: Restart containerd if cgroup driver changed.
+  systemd:
+    daemon_reload: true
+    name: containerd
+    state: restarted
+  when: cgroup_driver.changed

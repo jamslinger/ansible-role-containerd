@@ -1,0 +1,31 @@
+---
+- name: Ensure Docker is not installed.
+  package:
+    name:
+      - docker
+      - docker-engine
+      - docker-ce
+    state: absent
+
+- name: Ensure dependencies are installed.
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+    state: present
+
+- name: Ensure gnupg is installed.
+  apt:
+    name: gnupg
+    state: present
+
+- name: Add Docker apt-key.
+  apt_key:
+    url: "{{ docker_apt_gpg_key }}"
+    state: present
+
+- name: Add Docker repository.
+  apt_repository:
+    repo: "{{ docker_apt_repository }}"
+    state: present
+    update_cache: true

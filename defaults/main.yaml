@@ -1,0 +1,6 @@
+---
+containerd_proc_arch: arm64
+containerd_docker_repo_url: https://download.docker.com/linux
+containerd_docker_apt_release_channel: stable
+containerd_docker_apt_repository: "deb [arch={{ containerd_proc_arch }}] {{ containerd_docker_repo_url }}/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} {{ containerd_docker_apt_release_channel }}"
+containerd_docker_apt_gpg_key: "{{ containerd_docker_repo_url }}/{{ ansible_distribution | lower }}/gpg"
