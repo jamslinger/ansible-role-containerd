@@ -28,7 +28,7 @@
 
 - name: Install Containerd.
   package:
-    name: containerd.io
+    name: containerd
     state: present
 
 - name: Start containerd.
