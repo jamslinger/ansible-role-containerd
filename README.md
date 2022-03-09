@@ -38,7 +38,7 @@ Example Playbook
 ```
 - hosts: all
   roles:
-    - probosmo.containerd
+    - jamslinger.containerd
 ```
 
 License
