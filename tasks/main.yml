@@ -16,15 +16,18 @@
   modprobe:
     name: br_netfilter
 
+# Please note: A change here and subsequent sysctl --system might cause
+# coredns issues and require cilium pod restart.
 - name: Add 99-kubernetes-cri.conf file.
   template:
     src: 99-kubernetes-cri.conf.j2
     dest: /etc/sysctl.d/99-kubernetes-cri.conf
     mode: 0644
+  register: k8s_cri_config
 
 - name: Read new system config.
   command: sysctl --system
-  changed_when: false
+  when: k8s_cri_config.changed
 
 - name: Install Containerd.
   package:
